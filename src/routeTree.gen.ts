@@ -11,37 +11,88 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as HomeLayoutImport } from './routes/_HomeLayout'
+import { Route as HomeLayoutIndexImport } from './routes/_HomeLayout/index'
 
 // Create/Update Routes
+
+const HomeLayoutRoute = HomeLayoutImport.update({
+  id: '/_HomeLayout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomeLayoutIndexRoute = HomeLayoutIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HomeLayoutRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+  interface FileRoutesByPath {
+    '/_HomeLayout': {
+      id: '/_HomeLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof HomeLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/_HomeLayout/': {
+      id: '/_HomeLayout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof HomeLayoutIndexImport
+      parentRoute: typeof HomeLayoutImport
+    }
+  }
 }
 
 // Create and export the route tree
 
-export interface FileRoutesByFullPath {}
+interface HomeLayoutRouteChildren {
+  HomeLayoutIndexRoute: typeof HomeLayoutIndexRoute
+}
 
-export interface FileRoutesByTo {}
+const HomeLayoutRouteChildren: HomeLayoutRouteChildren = {
+  HomeLayoutIndexRoute: HomeLayoutIndexRoute,
+}
+
+const HomeLayoutRouteWithChildren = HomeLayoutRoute._addFileChildren(
+  HomeLayoutRouteChildren,
+)
+
+export interface FileRoutesByFullPath {
+  '': typeof HomeLayoutRouteWithChildren
+  '/': typeof HomeLayoutIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof HomeLayoutIndexRoute
+}
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/_HomeLayout': typeof HomeLayoutRouteWithChildren
+  '/_HomeLayout/': typeof HomeLayoutIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/'
+  id: '__root__' | '/_HomeLayout' | '/_HomeLayout/'
   fileRoutesById: FileRoutesById
 }
 
-export interface RootRouteChildren {}
+export interface RootRouteChildren {
+  HomeLayoutRoute: typeof HomeLayoutRouteWithChildren
+}
 
-const rootRouteChildren: RootRouteChildren = {}
+const rootRouteChildren: RootRouteChildren = {
+  HomeLayoutRoute: HomeLayoutRouteWithChildren,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
@@ -52,7 +103,19 @@ export const routeTree = rootRoute
   "routes": {
     "__root__": {
       "filePath": "__root.tsx",
-      "children": []
+      "children": [
+        "/_HomeLayout"
+      ]
+    },
+    "/_HomeLayout": {
+      "filePath": "_HomeLayout.tsx",
+      "children": [
+        "/_HomeLayout/"
+      ]
+    },
+    "/_HomeLayout/": {
+      "filePath": "_HomeLayout/index.tsx",
+      "parent": "/_HomeLayout"
     }
   }
 }
