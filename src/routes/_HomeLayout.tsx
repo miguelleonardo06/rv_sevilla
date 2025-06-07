@@ -8,6 +8,7 @@ function HomeLayout() {
   return (
     <main className="h-screen w-full">
       <Navbar />
+      dawdada
       <Outlet />
     </main>
   );
