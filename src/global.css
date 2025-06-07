@@ -48,7 +48,20 @@
     --radius: 0rem;
   }
 }
-
+@font-face {
+  font-family: "inter-normal";
+  src: url("./assets//font//inter-normal.ttf");
+}
+.inter-normal-font {
+  font-family: inter-normal;
+}
+@font-face {
+  font-family: "inter-light";
+  src: url("./assets/font//inter-light.ttf");
+}
+.inter-light-font {
+  font-family: inter-light;
+}
 @layer base {
   * {
     @apply border-border;
@@ -56,4 +69,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.navbar-container {
+  box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5);
 }
